@@ -116,6 +116,23 @@ FALLBACK = {
     "raznoe": "{name} — комплектующие для строительных и отделочных работ. Применяется вместе с основными материалами из каталога: смесями, гипсокартоном и профилями.",
 }
 
+def detect_brand(name):
+    n = name.lower()
+    brands = [("knauf", "KNAUF"), ("oberfix", "OBERFIX"), ("plitonit", "PLITONIT"),
+              ("декоратор", "Декоратор"), ("dk ", "Декоратор"), ("dk-", "Декоратор"),
+              ("gipsplast", "NEW MIX"), ("cemplast", "NEW MIX"), ("new mix", "NEW MIX"),
+              ("topsilk", "NEW MIX"), ("profitex", "Profitex"), ("gipscolor", "GIPSCOLOR"),
+              ("keramax", "KeraMax"), ("granifix", "GraniFIX"), ("kerafix", "KeraFix"),
+              ("teplofix", "TeploFIX"), ("strover", "STROVER"), ("металлпроф", "Металлпроф"),
+              ("mittel", "Декоратор"), ("betoncontakt", "Декоратор"), ("quartz grunt", "Декоратор"),
+              ("izl-t", "IZL-T")]
+    for key, brand in brands:
+        if key in n:
+            return brand
+    if re.search(r"\bdk\s?\d", n):
+        return "Декоратор"
+    return ""
+
 def load_products():
     prods = json.load(open(os.path.join(ROOT, "products_final.json"), encoding="utf-8"))
     cat_by_name = {c["name"]: c for c in CATEGORIES}
@@ -148,6 +165,7 @@ def load_products():
             "images": p.get("local_images") or [],
             "desc": desc,
             "old_url": p.get("url") or "",
+            "brand": detect_brand(p["title"]),
         })
     return out
 
@@ -158,8 +176,8 @@ def main():
         by_cat[p["cat"]].append(p)
 
     if os.path.exists(OUT):
-        shutil.rmtree(OUT)
-    shutil.copytree(SRC, OUT)
+        shutil.rmtree(OUT, ignore_errors=True)
+    shutil.copytree(SRC, OUT, dirs_exist_ok=True)
 
     env = Environment(loader=FileSystemLoader(os.path.join(ROOT, "templates")),
                       autoescape=select_autoescape(["html"]))

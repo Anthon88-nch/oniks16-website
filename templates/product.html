@@ -7,7 +7,7 @@
   "name": "{{ p.name }}",
   "image": "{{ base }}/{{ p.images[0] if p.images else '' }}",
   "description": "{{ p.desc[:220] | e }}",
-  "brand": {"@type": "Brand", "name": "{{ p.name.split(' ')[1] if p.name.split(' ')|length > 1 else p.name }}"},
+  {% if p.brand %}"brand": {"@type": "Brand", "name": "{{ p.brand }}"},{% endif %}
   "offers": {
     "@type": "Offer",
     "url": "{{ base }}/catalog/{{ p.cat }}/{{ p.slug }}/",

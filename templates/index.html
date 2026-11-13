@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <p class="hero__kicker">Набережные Челны · склад · доставка</p>
+      <h1>Строительные материалы <em>оптом и в розницу</em></h1>
+      <p class="hero__lead">Штукатурки, шпатлёвки, наливные полы, гипсокартон и клей — напрямую от производителей. Отгрузка со склада в день заказа, особые условия для бригад и прорабов.</p>
+      <div class="hero__actions">
+        <a class="btn btn--accent" href="/catalog/">Смотреть каталог</a>
+        <button class="btn btn--ghost" type="button" data-open-order>Получить смету</button>
+      </div>
+      <dl class="hero__stats">
+        <div><dt>{{ total }}+</dt><dd>позиций на складе</dd></div>
+        <div><dt>30 мин</dt><dd>расчёт сметы</dd></div>
+        <div><dt>1 день</dt><dd>отгрузка заказа</dd></div>
+      </dl>
+    </div>
+    <div class="hero__side" aria-hidden="true">
+      <div class="hero__card">
+        <span class="hero__card-label">Прямые поставки</span>
+        <strong>KNAUF · Декоратор · PLITONIT · OBERFIX · Profitex · GIPSCOLOR</strong>
+        <span>Работаем с производителями без лишних посредников — отсюда цена.</span>
+      </div>
+      <div class="hero__stripe"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2>Каталог материалов</h2>
+      <p>Выберите раздел — внутри актуальные цены и наличие.</p>
+    </div>
+    <div class="cat-grid">
+      {% for c in categories %}
+      <a class="cat-card" href="/catalog/{{ c.slug }}/">
+        <span class="cat-card__name">{{ c.name }}</span>
+        <span class="cat-card__short">{{ c.short }}</span>
+        <span class="cat-card__go">Смотреть →</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if hits %}
+<section class="sec sec--tinted">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2>Ходовые позиции</h2>
+      <p>То, что чаще всего забирают с объекта. Полный список — в каталоге.</p>
+    </div>
+    <div class="prod-grid">
+      {% for p in hits %}
+      <article class="prod-card">
+        <a class="prod-card__img" href="/catalog/{{ p.cat }}/{{ p.slug }}/">
+          {% if p.images %}<img src="/{{ p.images[0] }}" alt="{{ p.name }} — купить в Набережных Челнах" loading="lazy">{% endif %}
+        </a>
+        <div class="prod-card__body">
+          <a class="prod-card__name" href="/catalog/{{ p.cat }}/{{ p.slug }}/">{{ p.name }}</a>
+          <div class="prod-card__row">
+            {% if p.price %}<span class="price">{{ "{:,}".format(p.price).replace(",", " ") }} ₽</span>
+            {% else %}<span class="price price--ask">цена по запросу</span>{% endif %}
+            <button class="btn btn--sm btn--accent" type="button" data-open-order data-product="{{ p.name }}">Заявка</button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="sec__more"><a class="btn btn--ghost" href="/catalog/">Весь каталог →</a></div>
+  </div>
+</section>
+{% endif %}
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2>Почему с нами работают</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <span class="feat__num">01</span>
+        <h3>Склад в Челнах</h3>
+        <p>Ходовые позиции всегда в наличии — не ждите поставку неделями. Приехали, загрузились, поехали на объект.</p>
+      </div>
+      <div class="feat">
+        <span class="feat__num">02</span>
+        <h3>Цены без посредников</h3>
+        <p>Прямые договоры с производителями: Декоратор, PLITONIT, OBERFIX, Profitex. Оптовикам — персональные условия.</p>
+      </div>
+      <div class="feat">
+        <span class="feat__num">03</span>
+        <h3>Смета за 30 минут</h3>
+        <p>Пришлите список или план помещения — посчитаем материалы с запасом и без лишнего, забронируем на складе.</p>
+      </div>
+      <div class="feat">
+        <span class="feat__num">04</span>
+        <h3>Доставка по городу</h3>
+        <p>Привезём на объект в день заказа или на следующее утро. Возможен самовывоз: Казанский проспект, 234, стр. 7.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--dark">
+  <div class="wrap split">
+    <div>
+      <h2>Строите или отделываете в Челнах?</h2>
+      <p>Мы на рынке с 2018 года. Снабжаем частных мастеров, отделочные бригады и строительные компании по всему Закамью: Челны, Елабуга, Нижнекамск, Менделеевск.</p>
+      <ul class="ticks">
+        <li>официальные документы и счета для юрлиц</li>
+        <li>помогаем с подбором аналогов под бюджет</li>
+        <li>резерв товара на складе под ваш график работ</li>
+      </ul>
+    </div>
+    <div class="split__cta">
+      <span class="split__phone-label">Позвоните — подберём и посчитаем</span>
+      <a class="split__phone" href="tel:{{ phone_main_href }}">{{ phone_main }}</a>
+      <span class="split__hours">{{ work_hours }}</span>
+    </div>
+  </div>
+</section>
+{% endblock %}

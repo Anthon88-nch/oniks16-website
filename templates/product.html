@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ p.name }}",
+  "image": "{{ base }}/{{ p.images[0] if p.images else '' }}",
+  "description": "{{ p.desc[:220] | e }}",
+  "brand": {"@type": "Brand", "name": "{{ p.name.split(' ')[1] if p.name.split(' ')|length > 1 else p.name }}"},
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ base }}/catalog/{{ p.cat }}/{{ p.slug }}/",
+    "priceCurrency": "RUB",
+    {% if p.price %}"price": "{{ p.price }}",{% endif %}
+    "availability": "https://schema.org/InStock",
+    "itemCondition": "https://schema.org/NewCondition",
+    "areaServed": "Набережные Челны"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ base }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Каталог", "item": "{{ base }}/catalog/"},
+    {"@type": "ListItem", "position": 3, "name": "{{ cat.name }}", "item": "{{ base }}/catalog/{{ cat.slug }}/"},
+    {"@type": "ListItem", "position": 4, "name": "{{ p.name }}"}
+  ]
+}
+</script>
+{% endblock %}
+{% block content %}
+<nav class="wrap crumbs" aria-label="Хлебные крошки">
+  <a href="/">Главная</a> / <a href="/catalog/">Каталог</a> / <a href="/catalog/{{ cat.slug }}/">{{ cat.name }}</a> / <span>{{ p.name }}</span>
+</nav>
+
+<section class="sec sec--first">
+  <div class="wrap prod">
+    <div class="prod__gallery">
+      <div class="prod__main-img">
+        {% if p.images %}<img id="gallery-main" src="/{{ p.images[0] }}" alt="{{ p.name }} — фото, купить в Набережных Челнах">{% endif %}
+        <span class="prod__stock">В наличии на складе</span>
+      </div>
+      {% if p.images | length > 1 %}
+      <div class="prod__thumbs">
+        {% for img in p.images %}
+        <button class="prod__thumb{% if loop.first %} is-active{% endif %}" type="button" data-thumb="/{{ img }}" aria-label="Фото {{ loop.index }}">
+          <img src="/{{ img }}" alt="{{ p.name }} — фото {{ loop.index }}" loading="lazy">
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="prod__info">
+      <span class="prod__cat">{{ cat.name }}</span>
+      <h1>{{ p.name }}</h1>
+      <div class="prod__price-row">
+        {% if p.price %}
+        <span class="prod__price">{{ "{:,}".format(p.price).replace(",", " ") }} ₽</span>
+        <span class="prod__price-note">розничная цена · для опта — ниже</span>
+        {% else %}
+        <span class="prod__price prod__price--ask">Цена по запросу</span>
+        <span class="prod__price-note">позвоните — назовём актуальную</span>
+        {% endif %}
+      </div>
+      <div class="prod__actions">
+        <button class="btn btn--accent" type="button" data-open-order data-product="{{ p.name }}">Оформить заявку</button>
+        <a class="btn btn--ghost" href="https://wa.me/{{ whatsapp }}?text=Здравствуйте! Интересует: {{ p.name | urlencode }}" target="_blank" rel="noopener">Спросить в WhatsApp</a>
+      </div>
+      <ul class="prod__meta">
+        <li><strong>Склад:</strong> {{ address }}</li>
+        <li><strong>Отгрузка:</strong> в день заказа или на следующее утро</li>
+        <li><strong>Оплата:</strong> наличные, карта, счёт для юрлиц</li>
+        <li><strong>Опт:</strong> персональные условия от 1 паллеты</li>
+      </ul>
+
+      <div class="prod__desc">
+        <h2>Описание</h2>
+        {% for para in p.desc.split("\n\n") %}
+        <p>{{ para | replace("\n", "<br>") | safe }}</p>
+        {% endfor %}
+        <p class="prod__desc-cta">Остались вопросы по применению или расходу? Позвоните <a href="tel:{{ phone_main_href }}">{{ phone_main }}</a> — подскажем и рассчитаем количество под вашу площадь.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<section class="sec sec--tinted">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2>Похожие товары</h2>
+    </div>
+    <div class="prod-grid prod-grid--4">
+      {% for r in related %}
+      <article class="prod-card">
+        <a class="prod-card__img" href="/catalog/{{ r.cat }}/{{ r.slug }}/">
+          {% if r.images %}<img src="/{{ r.images[0] }}" alt="{{ r.name }} — купить в Набережных Челнах" loading="lazy">{% endif %}
+        </a>
+        <div class="prod-card__body">
+          <a class="prod-card__name" href="/catalog/{{ r.cat }}/{{ r.slug }}/">{{ r.name }}</a>
+          <div class="prod-card__row">
+            {% if r.price %}<span class="price">{{ "{:,}".format(r.price).replace(",", " ") }} ₽</span>
+            {% else %}<span class="price price--ask">цена по запросу</span>{% endif %}
+            <button class="btn btn--sm btn--accent" type="button" data-open-order data-product="{{ r.name }}">Заявка</button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

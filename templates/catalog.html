@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="wrap crumbs" aria-label="Хлебные крошки">
+  <a href="/">Главная</a> / <span>Каталог</span>
+</nav>
+<section class="sec sec--first">
+  <div class="wrap">
+    <div class="sec__head">
+      <h1>Каталог строительных материалов</h1>
+      <p>Строительные и отделочные материалы для частных мастеров, бригад и оптовых покупателей. Актуальные цены, наличие на складе в Набережных Челнах.</p>
+    </div>
+    <div class="cat-list">
+      {% for c in categories %}
+      <a class="cat-row" href="/catalog/{{ c.slug }}/">
+        <div class="cat-row__main">
+          <span class="cat-row__name">{{ c.name }}</span>
+          <span class="cat-row__short">{{ c.short }}</span>
+        </div>
+        <span class="cat-row__count">{{ by_cat[c.slug] | length }} поз.</span>
+        <span class="cat-row__go">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

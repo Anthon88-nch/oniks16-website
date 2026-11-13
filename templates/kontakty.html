@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="wrap crumbs" aria-label="Хлебные крошки">
+  <a href="/">Главная</a> / <span>Контакты</span>
+</nav>
+<section class="sec sec--first">
+  <div class="wrap narrow">
+    <h1>Контакты</h1>
+
+    <div class="contacts-grid">
+      <div class="contacts-card">
+        <h2>Телефоны</h2>
+        <p><a class="contacts-phone" href="tel:{{ phone_main_href }}">{{ phone_main }}</a><br>Ленар — опт, снабжение объектов</p>
+        <p><a class="contacts-phone" href="tel:{{ phone_second_href }}">{{ phone_second }}</a><br>Светлана — розница, приём заказов</p>
+        <p><a href="https://wa.me/{{ whatsapp }}" target="_blank" rel="noopener">Написать в WhatsApp →</a></p>
+      </div>
+      <div class="contacts-card">
+        <h2>Склад и офис</h2>
+        <p><strong>{{ address }}</strong></p>
+        <p>{{ work_hours }}</p>
+        <p>Вс — выходной</p>
+        <p><a href="mailto:{{ email }}">{{ email }}</a></p>
+      </div>
+    </div>
+
+    <h2>Как проехать</h2>
+    <p>Склад находится на Казанском проспекте, 234 (строение 7) — удобный подъезд для легковых и грузовых машин, есть место для разворота и погрузки. Ищите нас на Яндекс Картах: «ОНИКС, стройматериалы».</p>
+    <p>
+      <a class="btn btn--ghost" href="https://yandex.ru/maps/org/oniks/118793860196/" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+    </p>
+
+    <h2>Реквизиты</h2>
+    <p class="muted">{{ inn }} · {{ ogrn }}</p>
+
+    <div class="inline-cta">
+      <button class="btn btn--accent" type="button" data-open-callback>Заказать звонок</button>
+    </div>
+  </div>
+</section>
+{% endblock %}

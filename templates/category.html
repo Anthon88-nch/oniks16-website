@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ base }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Каталог", "item": "{{ base }}/catalog/"},
+    {"@type": "ListItem", "position": 3, "name": "{{ cat.name }}"}
+  ]
+}
+</script>
+{% endblock %}
+{% block content %}
+<nav class="wrap crumbs" aria-label="Хлебные крошки">
+  <a href="/">Главная</a> / <a href="/catalog/">Каталог</a> / <span>{{ cat.name }}</span>
+</nav>
+<section class="sec sec--first">
+  <div class="wrap">
+    <div class="sec__head">
+      <h1>{{ cat.name }} в Набережных Челнах</h1>
+      <p>{{ cat.text }}</p>
+    </div>
+
+    <div class="prod-grid">
+      {% for p in products %}
+      <article class="prod-card">
+        <a class="prod-card__img" href="/catalog/{{ p.cat }}/{{ p.slug }}/">
+          {% if p.images %}<img src="/{{ p.images[0] }}" alt="{{ p.name }} — купить в Набережных Челнах" loading="lazy">{% endif %}
+        </a>
+        <div class="prod-card__body">
+          <a class="prod-card__name" href="/catalog/{{ p.cat }}/{{ p.slug }}/">{{ p.name }}</a>
+          <div class="prod-card__row">
+            {% if p.price %}<span class="price">{{ "{:,}".format(p.price).replace(",", " ") }} ₽</span>
+            {% else %}<span class="price price--ask">цена по запросу</span>{% endif %}
+            <button class="btn btn--sm btn--accent" type="button" data-open-order data-product="{{ p.name }}">Заявка</button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="cat-seo">
+      <h2>{{ cat.name }} — наличие и отгрузка</h2>
+      <p>Все позиции раздела — со склада в Набережных Челнах (Казанский проспект, 234, стр. 7). Отгружаем в день заказа, работаем с физическими и юридическими лицами. Если не нашли нужную позицию — позвоните <a href="tel:{{ phone_main_href }}">{{ phone_main }}</a>, привезём под заказ или подберём аналог.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

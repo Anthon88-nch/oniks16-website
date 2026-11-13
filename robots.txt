@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oniks16.ru/sitemap.xml
